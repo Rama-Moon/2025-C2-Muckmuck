@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct EventModel: Hashable, Identifiable {
+struct EventModel: Identifiable {
     let id = UUID()
     let host: String
     let date: Date
