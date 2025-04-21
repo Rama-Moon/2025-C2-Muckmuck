@@ -11,27 +11,25 @@ struct MyEventItem: View {
     var event: Event
     
     var body: some View {
-        Button(action: {}) {
-            HStack {
-                VStack(alignment: .leading) {
-                    Group {
-                        Text("\(event.host.nickname)의 모임")
-                            .font(.title2)
-                            .bold()
-                        Text("\(DateFormatter.eventFormat.string(from: event.date))")
-                            .font(.footnote)
-                            .bold()
-                        Spacer()
-                        Text("\(event.minNum)명에서 \(event.maxNum)명")
-                            .font(.footnote)
-                            .bold()
-                    }
-                    .foregroundStyle(.white)
+        HStack {
+            VStack(alignment: .leading) {
+                Group {
+                    Text("\(event.host.nickname)의 모임")
+                        .font(.title2)
+                        .bold()
+                    Text("\(DateFormatter.eventFormat.string(from: event.date))")
+                        .font(.footnote)
+                        .bold()
+                    Spacer()
+                    Text("\(event.minNum)명에서 \(event.maxNum)명")
+                        .font(.footnote)
+                        .bold()
                 }
-                Spacer()
+                .foregroundStyle(.white)
             }
-            .padding(12)
+            Spacer()
         }
+        .padding(12)
         .background(event.category.eventColor)
         .cornerRadius(20)
     }

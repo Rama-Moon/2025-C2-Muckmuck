@@ -12,10 +12,16 @@ struct HomeView: View {
     @Environment(\.modelContext) var modelContext
     @Query var muckEvents: [Event]
     
+    private var myEvents: [Event] {
+        muckEvents.filter { $0.isMine }
+    }
+    private var upcomingEvents: [Event] {
+        muckEvents.filter { !$0.isMine }
+    }
+    
     @State private var selectedEvent: Event?
     @State private var showDetail = false
     @State private var showDialog = false
-
     
     var body: some View {
         NavigationStack {
@@ -23,8 +29,15 @@ struct HomeView: View {
             upcomingEventView
             myEventView
             Spacer()
+                .navigationDestination(for: Category.self) { category in
+                    AddEventView(category: category)
+                }
+                .navigationDestination(for: Event.self) { event in
+                    EventDetailView(event: event)
+                }
         }
     }
+    
     
     private var navigationView: some View {
         HStack {
@@ -50,9 +63,6 @@ struct HomeView: View {
                     Text("술")
                 }
                 Button("취소", role: .cancel) {}
-            }
-            .navigationDestination(for: Category.self) { category in
-                AddEventView(category: category)
             }
         }
         .padding()
@@ -80,20 +90,18 @@ struct HomeView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(alignment: .top, spacing: 12) {
-                    let groupCount = Int(ceil(Double(muckEvents.count) / 3.0))
-                    ForEach(0..<groupCount, id: \.self) { columnIndex in
+                    let upcomingEvents = muckEvents.filter { !$0.isMine }
+                    let groupRange: [Int] = Array(0..<Int(ceil(Double(upcomingEvents.count) / 3.0)))
+                    ForEach(groupRange, id: \.self) { columnIndex in
                         let startIndex = columnIndex * 3
-                        let group = Array(muckEvents[startIndex..<min(startIndex + 3, muckEvents.count)])
+                        let group = Array(upcomingEvents[startIndex..<min(startIndex + 3, upcomingEvents.count)])
                         
                         VStack(spacing: 8) {
                             ForEach(group) { event in
-                                UpcomingEventItem(event: event)
-                                    .frame(width: 362, height: 111)
-                                    .onTapGesture {
-                                        print("Tapped: \(event.eventName)")
-                                        selectedEvent = event
-                                        showDetail = true
-                                    }
+                                NavigationLink(value: event) {
+                                    UpcomingEventItem(event: event)
+                                        .frame(width: 362, height: 111)
+                                }
                             }
                         }
                         .scrollTargetLayout()
@@ -108,33 +116,26 @@ struct HomeView: View {
     
     private var myEventView: some View {
         VStack(alignment: .leading) {
-            Button(
-                action: {},
-                label: {
-                    Label(title: {
-                        Text("나의 모임")
-                            .font(.title2)
-                            .bold()
-                            .foregroundStyle(.black)
-                    }, icon: {
-                        Image(systemName: "chevron.right")
-                            .imageScale(.large)
-                            .foregroundStyle(.black)
-                    })
-                    .labelStyle(TrailingIconLabelStyle())
-                }
-            )
+            Button(action: {}) {
+                Text("나의 모임")
+                    .font(.title2)
+                    .bold()
+                    .foregroundStyle(.black)
+            }
             
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 12) {
-                    ForEach(0...muckEvents.count / 2, id: \.self) { groupIndex in
+                    let myEvents = muckEvents.filter { $0.isMine }
+                    ForEach(0...myEvents.count / 2, id: \.self) { groupIndex in
                         let startIndex = groupIndex * 2
-                        let group = Array(muckEvents[startIndex..<min(startIndex + 2, muckEvents.count)])
+                        let group = Array(myEvents[startIndex..<min(startIndex + 2, myEvents.count)])
                         
                         HStack(spacing: 12) {
                             ForEach(group) { event in
-                                MyEventItem(event: event)
-                                    .frame(width: 173, height: 173)
+                                NavigationLink(value: event) {
+                                    MyEventItem(event: event)
+                                        .frame(width: 173, height: 173)
+                                }
                             }
                         }
                         .scrollTargetLayout()
@@ -145,30 +146,6 @@ struct HomeView: View {
             .scrollTargetBehavior(.viewAligned)
         }
         .padding([.leading, .bottom])
-    }
-    
-    func insertDummy() {
-        let host = User(nickname: "Rama")
-        modelContext.insert(host)
-        
-        let dummyEvents = [
-            Event(
-                id: UUID(),
-                eventName: "저녁 먹을 사람 구함",
-                category: .meal,
-                date: .now.addingTimeInterval(3600),
-                location: "지곡회관",
-                minNum: 2,
-                maxNum: 6,
-                host: host,
-                attendant: [],
-                isMine: true
-            )
-        ]
-        
-        for event in dummyEvents {
-            modelContext.insert(event)
-        }
     }
 }
 
