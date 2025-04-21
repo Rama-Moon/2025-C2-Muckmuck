@@ -110,7 +110,6 @@ struct AddEventView: View {
                         modelContext.insert(dummyUser)
                         
                         let newEvent = Event(
-                            id: UUID(),
                             eventName: eventName,
                             category: category,
                             date: date ?? Date(),
@@ -122,7 +121,7 @@ struct AddEventView: View {
                             isMine: true
                         )
                         modelContext.insert(newEvent)
-                    
+    
                     do {
                         try modelContext.save()
                         print("✅ 이벤트 저장 성공: \(newEvent.eventName)")
@@ -133,6 +132,7 @@ struct AddEventView: View {
                     }
                 }) {
                     Text("참가하기")
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .foregroundStyle(.white)
                 }
                 .frame(width: UIScreen.mainBounds.width - 32, height: 60)

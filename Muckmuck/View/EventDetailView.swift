@@ -12,18 +12,18 @@ struct EventDetailView: View {
     
     var body: some View {
         ZStack {
-            Color.coffeeBrown.ignoresSafeArea()
+            event.category.eventColor.ignoresSafeArea()
             
             ScrollView {
                 VStack {
-                    Image(.coffee)
+                    event.category.eventImage
                         .resizable()
                         .frame(width: 220, height: 175)
                         .padding()
                     
                     VStack {
                         Group {
-                            Text("\(event.host.nickname)'s")
+                            Text("\(event.host.nickname)의")
                             Text("\(event.eventName)")
                         }
                         .font(.largeTitle)
@@ -96,7 +96,3 @@ struct EventDetailView: View {
         }
     }
 }
-//
-//#Preview {
-//    EventDetailView()
-//}

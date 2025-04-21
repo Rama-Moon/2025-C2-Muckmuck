@@ -15,7 +15,7 @@ struct MyEventItem: View {
             HStack {
                 VStack(alignment: .leading) {
                     Group {
-                        Text("\(event.eventName)의 모임")
+                        Text("\(event.host.nickname)의 모임")
                             .font(.title2)
                             .bold()
                         Text("\(DateFormatter.eventFormat.string(from: event.date))")

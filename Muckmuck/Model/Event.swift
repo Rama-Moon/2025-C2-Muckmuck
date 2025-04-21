@@ -11,7 +11,6 @@ import SwiftUI
 
 @Model
 class Event: Identifiable {
-    var id: UUID
     var eventName: String
     var category: Category
     var date: Date
@@ -23,7 +22,6 @@ class Event: Identifiable {
     var isMine: Bool
     
     init(
-        id: UUID,
         eventName: String,
         category: Category,
         date: Date,
@@ -34,7 +32,6 @@ class Event: Identifiable {
         attendant: [User],
         isMine: Bool
     ) {
-        self.id = id
         self.eventName = eventName
         self.category = category
         self.date = date
@@ -56,9 +53,23 @@ enum Category: String, Codable, CaseIterable {
 extension Category {
     var eventColor: Color {
         switch self {
-        case .meal: return .mealGreen
-        case .coffee: return .coffeeBrown
-        case .drink: return .beerOrange
+        case .meal:
+            return .mealGreen
+        case .coffee:
+            return .coffeeBrown
+        case .drink:
+            return .beerOrange
+        }
+    }
+    
+    var eventImage: Image {
+        switch self {
+        case .meal:
+            return Image(.meal)
+        case .coffee:
+            return Image(.coffee)
+        case.drink:
+            return Image(.drink)
         }
     }
 }
