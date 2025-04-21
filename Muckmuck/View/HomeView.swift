@@ -12,53 +12,50 @@ struct HomeView: View {
     @Environment(\.modelContext) var modelContext
     @Query var muckEvents: [Event]
     
+    @State private var selectedEvent: Event?
+    @State private var showDetail = false
+    @State private var showDialog = false
+
+    
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Text("MuckMuck")
-                    .font(.largeTitle)
-                    .bold()
-                Spacer()
-                Button("모임 추가하기") {}
-            }
-            .padding()
-            
+        NavigationStack {
+            navigationView
             upcomingEventView
-            
             myEventView
-                .padding([.leading, .bottom])
-            
             Spacer()
         }
-        //        .onAppear {
-        //            if events.isEmpty {
-        //                insertDummy()
-        //            }
-        //        }
     }
     
-    func insertDummy() {
-        let host = User(nickname: "Rama")
-        modelContext.insert(host)
-        
-        let dummyEvents = [
-            Event(
-                id: UUID(),
-                eventName: "저녁 먹을 사람 구함",
-                category: .meal,
-                date: .now.addingTimeInterval(3600),
-                location: "지곡회관",
-                minNum: 2,
-                maxNum: 6,
-                host: host,
-                attendant: [],
-                isMine: true
-            )
-        ]
-        
-        for event in dummyEvents {
-            modelContext.insert(event)
+    private var navigationView: some View {
+        HStack {
+            Text("MuckMuck")
+                .font(.largeTitle)
+                .bold()
+            Spacer()
+            Button("모임 만들기") {
+                showDialog = true
+            }
+            .confirmationDialog(
+                "모임을 선택해주세요",
+                isPresented: $showDialog,
+                titleVisibility: .visible
+            ) {
+                NavigationLink(value: Category.meal) {
+                    Text("밥")
+                }
+                NavigationLink(value: Category.coffee) {
+                    Text("커피")
+                }
+                NavigationLink(value: Category.drink) {
+                    Text("술")
+                }
+                Button("취소", role: .cancel) {}
+            }
+            .navigationDestination(for: Category.self) { category in
+                AddEventView(category: category)
+            }
         }
+        .padding()
     }
     
     private var upcomingEventView: some View {
@@ -92,6 +89,11 @@ struct HomeView: View {
                             ForEach(group) { event in
                                 UpcomingEventItem(event: event)
                                     .frame(width: 362, height: 111)
+                                    .onTapGesture {
+                                        print("Tapped: \(event.eventName)")
+                                        selectedEvent = event
+                                        showDetail = true
+                                    }
                             }
                         }
                         .scrollTargetLayout()
@@ -141,6 +143,31 @@ struct HomeView: View {
             }
             .frame(height: 173)
             .scrollTargetBehavior(.viewAligned)
+        }
+        .padding([.leading, .bottom])
+    }
+    
+    func insertDummy() {
+        let host = User(nickname: "Rama")
+        modelContext.insert(host)
+        
+        let dummyEvents = [
+            Event(
+                id: UUID(),
+                eventName: "저녁 먹을 사람 구함",
+                category: .meal,
+                date: .now.addingTimeInterval(3600),
+                location: "지곡회관",
+                minNum: 2,
+                maxNum: 6,
+                host: host,
+                attendant: [],
+                isMine: true
+            )
+        ]
+        
+        for event in dummyEvents {
+            modelContext.insert(event)
         }
     }
 }

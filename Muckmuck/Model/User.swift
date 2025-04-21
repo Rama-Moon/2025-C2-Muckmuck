@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class User {
+class User: Identifiable {
     var id: UUID
     var nickname: String
 

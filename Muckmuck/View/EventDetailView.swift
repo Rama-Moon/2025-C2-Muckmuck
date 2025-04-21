@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct EventDetailView: View {
+    @Bindable var event: Event
+    
     var body: some View {
         ZStack {
             Color.coffeeBrown.ignoresSafeArea()
@@ -21,16 +23,16 @@ struct EventDetailView: View {
                     
                     VStack {
                         Group {
-                            Text("Alex's")
-                            Text("Party")
+                            Text("\(event.host.nickname)'s")
+                            Text("\(event.eventName)")
                         }
                         .font(.largeTitle)
                         .foregroundStyle(.white)
                         .bold()
                         
                         Group {
-                            Text("Tue, September 2, 8.00PM")
-                            Text("Brooklyn, NY")
+                            Text("\(DateFormatter.eventFormat.string(from: event.date))")
+                            Text("\(event.location)")
                         }
                         .font(.title3)
                         .foregroundStyle(.white)
@@ -76,6 +78,7 @@ struct EventDetailView: View {
                 }
             }
         }
+
     }
     
     private var attendant: some View {
@@ -93,7 +96,7 @@ struct EventDetailView: View {
         }
     }
 }
-
-#Preview {
-    EventDetailView()
-}
+//
+//#Preview {
+//    EventDetailView()
+//}

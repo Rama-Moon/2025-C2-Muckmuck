@@ -32,7 +32,7 @@ struct MyEventItem: View {
             }
             .padding(12)
         }
-        .background(.beerOrange)
+        .background(event.category.eventColor)
         .cornerRadius(20)
     }
 }

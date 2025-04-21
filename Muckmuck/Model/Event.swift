@@ -10,7 +10,7 @@ import SwiftData
 import SwiftUI
 
 @Model
-class Event {
+class Event: Identifiable {
     var id: UUID
     var eventName: String
     var category: Category
