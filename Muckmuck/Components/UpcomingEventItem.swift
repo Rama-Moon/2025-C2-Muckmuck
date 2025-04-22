@@ -1,0 +1,40 @@
+//
+//  UpcomingEventItem.swift
+//  Muckmuck
+//
+//  Created by Rama on 4/18/25.
+//
+
+import SwiftUI
+
+struct UpcomingEventItem: View {
+    var event: Event
+    
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Group {
+                    Text("\(event.host.nickname)의 모임")
+                        .font(.title2)
+                        .bold()
+                    Text("\(DateFormatter.eventFormat.string(from: event.date))")
+                        .font(.footnote)
+                        .bold()
+                    Spacer()
+                    Text("\(event.minNum)명에서 \(event.maxNum)명")
+                        .font(.footnote)
+                        .bold()
+                }
+                .foregroundStyle(.white)
+            }
+            Spacer()
+            event.category.eventImage
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+        }
+        .padding(12)
+        .background(event.category.eventColor)
+        .cornerRadius(20)
+    }
+}
+
