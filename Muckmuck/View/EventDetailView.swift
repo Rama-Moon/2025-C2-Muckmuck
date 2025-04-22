@@ -19,7 +19,8 @@ struct EventDetailView: View {
                 VStack {
                     event.category.eventImage
                         .resizable()
-                        .frame(width: 220, height: 175)
+                        .frame(height: 200)
+                        .scaledToFit()
                         .padding()
                     
                     VStack {
@@ -35,7 +36,7 @@ struct EventDetailView: View {
                             Text("\(DateFormatter.eventFormat.string(from: event.date))")
                             Text("\(event.location)")
                         }
-                        .font(.title3)
+                        .font(.title2)
                         .foregroundStyle(.white)
                     }
                     .padding(.bottom)

@@ -11,14 +11,8 @@ import SwiftData
 struct HomeView: View {
     @Environment(\.modelContext) var modelContext
     @Query var muckEvents: [Event]
-    
-    private var myEvents: [Event] {
-        muckEvents.filter { $0.isMine }
-    }
-    private var upcomingEvents: [Event] {
-        muckEvents.filter { !$0.isMine }
-    }
-    
+    private var myEvents: [Event] { muckEvents.filter { $0.isMine }}
+    private var upcomingEvents: [Event] { muckEvents.filter { !$0.isMine }}
     @State private var selectedEvent: Event?
     @State private var showDetail = false
     @State private var showDialog = false
@@ -38,13 +32,14 @@ struct HomeView: View {
         }
     }
     
-    
     private var navigationView: some View {
         HStack {
             Text("MuckMuck")
                 .font(.largeTitle)
                 .bold()
+            
             Spacer()
+            
             Button("모임 만들기") {
                 showDialog = true
             }
@@ -53,15 +48,9 @@ struct HomeView: View {
                 isPresented: $showDialog,
                 titleVisibility: .visible
             ) {
-                NavigationLink(value: Category.meal) {
-                    Text("밥")
-                }
-                NavigationLink(value: Category.coffee) {
-                    Text("커피")
-                }
-                NavigationLink(value: Category.drink) {
-                    Text("술")
-                }
+                NavigationLink(value: Category.meal) { Text("밥") }
+                NavigationLink(value: Category.coffee) { Text("커피") }
+                NavigationLink(value: Category.drink) {Text("술") }
                 Button("취소", role: .cancel) {}
             }
         }
@@ -71,8 +60,7 @@ struct HomeView: View {
     private var upcomingEventView: some View {
         VStack(alignment: .leading) {
             Button(
-                action: {
-                },
+                action: {},
                 label: {
                     Label(title: {
                         Text("다가오는 모임")
